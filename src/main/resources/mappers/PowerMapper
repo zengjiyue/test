@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cy.mapper.PowerMapper">
+    <select id="findPower" resultType="com.cy.bean.Tblpower">
+        SELECT * FROM tblpower WHERE parentId=0 or powerId in (SELECT powerId from tblrolepower WHERE roleId=#{roleId})
+    </select>
+    <select id="noHavePower" resultType="com.cy.bean.Tblpower">
+        SELECT * FROM tblpower WHERE parentId=0 or powerId not in (SELECT powerId from tblrolepower WHERE roleId=#{roleId})
+    </select>
+    <insert id="insertPower">
+        insert into tblrolepower(roleId,powerId) values (#{roleId},#{powerId})
+    </insert>
+    <delete id="delPower">
+        delete from tblrolepower where roleId=#{roleId} and powerId=#{powerId}
+    </delete>
+    <delete id="delAllPower">
+        delete from tblrolepower where roleId=#{roleId}
+    </delete>
+    <select id="findAllPowerId" resultType="long">
+        select powerId from tblpower
+    </select>
+    <delete id="delAllPowerNoParent">
+        delete from tblrolepower where roleId=#{roleId} and powerId in (SELECT powerId FROM tblpower WHERE parentId!=0)
+    </delete>
+
+
+</mapper>
